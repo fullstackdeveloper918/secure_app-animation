@@ -1,23 +1,27 @@
-function mergeConfig(nextConfig, userConfig) {
-  if (!userConfig) {
-    return nextConfig; // Ensure it returns nextConfig even if userConfig is undefined
-  }
+function mergeConfig(nextConfig = {}, userConfig = {}) {
+  const mergedConfig = { ...nextConfig };
 
   for (const key in userConfig) {
     if (
       typeof nextConfig[key] === 'object' &&
-      !Array.isArray(nextConfig[key])
+      !Array.isArray(nextConfig[key]) &&
+      typeof userConfig[key] === 'object' &&
+      !Array.isArray(userConfig[key])
     ) {
-      nextConfig[key] = {
+      mergedConfig[key] = {
         ...nextConfig[key],
         ...userConfig[key],
-      }
+      };
     } else {
-      nextConfig[key] = userConfig[key]
+      mergedConfig[key] = userConfig[key];
     }
   }
 
-  return nextConfig; // Ensure final merged config is returned
+  return mergedConfig;
 }
+
+// Example usage:
+const nextConfig = {}; // Define your Next.js config here
+const userConfig = {}; // Define your user-specific config here
 
 export default mergeConfig(nextConfig, userConfig);
